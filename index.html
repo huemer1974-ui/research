@@ -68,7 +68,10 @@ h2{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:24px;mar
 .date{display:inline-block;min-width:88px;margin-right:12px;font-variant-numeric:tabular-nums}
 
 footer{padding:28px 0 48px;color:var(--muted);font-size:13px}
-@media (max-width:560px){h1{font-size:32px}header{padding-top:40px}}
+.more{margin-top:10px;background:none;border:1px solid var(--line);color:var(--accent);border-radius:6px;padding:6px 12px;font:500 14px Inter,sans-serif;cursor:pointer}
+.list .hidden{display:none}
+@media (max-width:560px){h1{font-size:32px}header{padding-top:40px}
+  .ticker{font-size:16px}.ticker .label{font-size:13px}.ticker .track{padding:12px 0 12px 150px}}
 </style>
 </head>
 <body>
@@ -145,7 +148,14 @@ async function loadWorks(){
       const link = doi ? `https://doi.org/${doi}` : (s.url?.value || `https://orcid.org/${ORCID}`);
       return {title:s.title?.title?.value, year:s["publication-date"]?.year?.value || "", venue:s["journal-title"]?.value || "", type:(s.type||"").replace(/-/g," "), link};
     }).sort((a,b) => (b.year||0) - (a.year||0));
-    el.innerHTML = rows.map(w => `<li class="item"><div class="t"><a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.title)}</a></div><div class="m">${[w.year,w.venue,w.type].filter(Boolean).map(esc).join(" · ")}</div></li>`).join("");
+    const SHOW = 5;
+    el.innerHTML = rows.map((w,i) => `<li class="item${i >= SHOW ? " hidden" : ""}"><div class="t"><a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.title)}</a></div><div class="m">${[w.year,w.venue,w.type].filter(Boolean).map(esc).join(" · ")}</div></li>`).join("");
+    if(rows.length > SHOW){
+      const b = document.createElement("button");
+      b.className = "more"; b.textContent = `Show all ${rows.length} publications`;
+      b.onclick = () => { el.querySelectorAll(".hidden").forEach(x => x.classList.remove("hidden")); b.remove(); };
+      el.after(b);
+    }
   }catch(e){ el.innerHTML = `<li class="empty">Could not load ORCID right now – see <a href="https://orcid.org/${ORCID}">ORCID profile</a>.</li>`; }
 }
 
@@ -185,6 +195,8 @@ async function buildTicker(){
     if(!all.length){ el.innerHTML = "<span>No new papers.</span>"; return; }
     const html = all.map(w => `<span><a href="${esc(w.link)}" target="_blank" rel="noopener">${w.own ? "★ " : ""}${esc(w.title)}</a><span class="src">${esc(w.topic)} · ${esc(w.venue)}</span></span>`).join("");
     el.innerHTML = html + html; // doubled for seamless loop
+    const pxPerSec = window.innerWidth < 600 ? 30 : 45; // calm, readable speed
+    el.style.animationDuration = Math.round((el.scrollWidth / 2) / pxPerSec) + "s";
   }catch(e){ el.innerHTML = "<span>Research radar is temporarily unavailable.</span>"; }
 }
 
