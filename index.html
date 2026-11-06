@@ -64,6 +64,7 @@ h2{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:24px;mar
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}
 .tab{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:6px;padding:6px 12px;font:500 14px Inter,sans-serif;cursor:pointer}
 .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.own{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:999px;background:var(--orcid);color:#1c1f24;font-size:12px;font-weight:600;vertical-align:2px}
 .date{display:inline-block;min-width:88px;margin-right:12px;font-variant-numeric:tabular-nums}
 
 footer{padding:28px 0 48px;color:var(--muted);font-size:13px}
@@ -107,7 +108,7 @@ footer{padding:28px 0 48px;color:var(--muted);font-size:13px}
 
   <section>
     <h2>Research radar</h2>
-    <p class="sub">Newest journal articles from the last 90 days, retrieved live from <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a>.</p>
+    <p class="sub">Latest issues of <em>The Journal of Fixed Income</em> and newest journal articles by topic (last 90 days), retrieved live from <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a>.</p>
     <div class="tabs" role="tablist" id="tabs"></div>
     <ul class="list" id="radar"><li class="empty">Loading …</li></ul>
   </section>
@@ -120,6 +121,7 @@ footer{padding:28px 0 48px;color:var(--muted);font-size:13px}
 <script>
 const ORCID = "0009-0003-9339-0887";
 const TOPICS = [
+  {id:"jfi", name:"Journal of Fixed Income", source:"S99789271"},
   {id:"fi",  name:"Fixed Income",     q:'"fixed income" OR "government bond" OR "yield curve" OR "term premium" OR "bond returns"'},
   {id:"cr",  name:"Credit",           q:'"credit spread" OR "corporate bond" OR "credit risk premium"'},
   {id:"fac", name:"Factor Investing", q:'"factor investing" OR "factor premia" OR "factor model" OR "smart beta"'},
@@ -128,6 +130,8 @@ const TOPICS = [
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const iso = d => d.toISOString().slice(0,10);
 const cache = {};
+const ME = /H(ü|ue|u)mer/i;
+const badge = w => w.own ? '<span class="own">My paper</span>' : "";
 
 async function loadWorks(){
   const el = document.getElementById("works");
@@ -148,12 +152,15 @@ async function loadWorks(){
 async function fetchTopic(t, n=10){
   if(cache[t.id]) return cache[t.id];
   const to = iso(new Date()), from = iso(new Date(Date.now() - 90*864e5));
-  const filter = [`title_and_abstract.search:${t.q}`, "primary_topic.field.id:20", "primary_location.source.type:journal", `from_publication_date:${from}`, `to_publication_date:${to}`].join(",");
+  const filter = t.source
+    ? [`primary_location.source.id:${t.source}`, `to_publication_date:${to}`].join(",")
+    : [`title_and_abstract.search:${t.q}`, "primary_topic.field.id:20", "primary_location.source.type:journal", `from_publication_date:${from}`, `to_publication_date:${to}`].join(",");
   const u = `https://api.openalex.org/works?filter=${encodeURIComponent(filter)}&sort=publication_date:desc&per_page=${n}&select=id,title,publication_date,doi,primary_location,authorships`;
   const r = await fetch(u); const j = await r.json();
   return cache[t.id] = (j.results || []).map(w => ({
     title:w.title, date:w.publication_date, link:w.doi || w.primary_location?.landing_page_url || w.id,
     venue:w.primary_location?.source?.display_name || "",
+    own:(w.authorships||[]).some(a => ME.test(a.author?.display_name || "")),
     authors:(w.authorships||[]).slice(0,3).map(a => a.author?.display_name).filter(Boolean).join(", ") + ((w.authorships||[]).length > 3 ? " et al." : "")
   }));
 }
@@ -164,7 +171,7 @@ async function showTopic(id){
   el.innerHTML = '<li class="empty">Loading …</li>';
   try{
     const items = await fetchTopic(TOPICS.find(t => t.id === id));
-    el.innerHTML = items.length ? items.map(w => `<li class="item"><div class="t"><a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.title)}</a></div><div class="m"><span class="date">${esc(w.date)}</span>${esc(w.venue)}${w.authors ? " · " + esc(w.authors) : ""}</div></li>`).join("")
+    el.innerHTML = items.length ? items.map(w => `<li class="item"><div class="t"><a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.title)}</a>${badge(w)}</div><div class="m"><span class="date">${esc(w.date)}</span>${esc(w.venue)}${w.authors ? " · " + esc(w.authors) : ""}</div></li>`).join("")
       : '<li class="empty">No new articles in this period.</li>';
   }catch(e){ el.innerHTML = '<li class="empty">Research radar is temporarily unavailable.</li>'; }
 }
@@ -176,7 +183,7 @@ async function buildTicker(){
     const seen = new Set();
     const all = lists.flat().filter(w => !seen.has(w.title) && seen.add(w.title)).sort((a,b) => b.date.localeCompare(a.date));
     if(!all.length){ el.innerHTML = "<span>No new papers.</span>"; return; }
-    const html = all.map(w => `<span><a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.title)}</a><span class="src">${esc(w.topic)} · ${esc(w.venue)}</span></span>`).join("");
+    const html = all.map(w => `<span><a href="${esc(w.link)}" target="_blank" rel="noopener">${w.own ? "★ " : ""}${esc(w.title)}</a><span class="src">${esc(w.topic)} · ${esc(w.venue)}</span></span>`).join("");
     el.innerHTML = html + html; // doubled for seamless loop
   }catch(e){ el.innerHTML = "<span>Research radar is temporarily unavailable.</span>"; }
 }
@@ -184,7 +191,7 @@ async function buildTicker(){
 document.getElementById("tabs").innerHTML = TOPICS.map(t => `<button class="tab" role="tab" data-id="${t.id}">${t.name}</button>`).join("");
 document.getElementById("tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if(b) showTopic(b.dataset.id); });
 loadWorks();
-showTopic("fi");
+showTopic("jfi");
 buildTicker();
 </script>
 </body>
