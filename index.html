@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dominik Hümer · Research</title>
+<meta name="description" content="Research in fixed income, credit, factor investing and multi-asset portfolio construction – publications and a live radar of new academic research.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbfaf7; --surface:#ffffff; --text:#1c1f24; --muted:#5d6470; --line:#e4e1da;
+  --accent:#1f4e79; --accent-soft:#e8eef5; --tick-bg:#14324f; --tick-text:#f3f6fa; --orcid:#a6ce39;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121417; --surface:#1a1d21; --text:#e8e9eb; --muted:#9aa1ab; --line:#2b2f35;
+    --accent:#8db8e3; --accent-soft:#1d2a38; --tick-bg:#0c1a29; --tick-text:#dfe8f2;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121417; --surface:#1a1d21; --text:#e8e9eb; --muted:#9aa1ab; --line:#2b2f35;
+  --accent:#8db8e3; --accent-soft:#1d2a38; --tick-bg:#0c1a29; --tick-text:#dfe8f2;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:16px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+
+/* Ticker */
+.ticker{background:var(--tick-bg);color:var(--tick-text);font-size:14px;overflow:hidden;white-space:nowrap;position:relative}
+.ticker .label{position:absolute;left:0;top:0;bottom:0;z-index:2;display:flex;align-items:center;padding:0 14px;background:var(--tick-bg);font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:12px;box-shadow:8px 0 12px var(--tick-bg)}
+.ticker .track{display:inline-flex;gap:48px;padding:9px 0 9px 140px;animation:scroll 120s linear infinite}
+.ticker:hover .track{animation-play-state:paused}
+.ticker a{color:var(--tick-text)}
+.ticker .src{opacity:.65;margin-left:6px}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.ticker .track{animation:none;overflow-x:auto}}
+
+header{padding:56px 0 28px;border-bottom:1px solid var(--line)}
+h1{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:40px;line-height:1.15;margin:0 0 8px}
+.role{color:var(--muted);margin:0 0 18px}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;color:var(--text)}
+.pill:hover{border-color:var(--accent);text-decoration:none}
+.orcid-dot{width:16px;height:16px;border-radius:50%;background:var(--orcid);color:#fff;font:700 9px/16px Inter,sans-serif;text-align:center}
+
+section{padding:36px 0;border-bottom:1px solid var(--line)}
+h2{font-family:"Source Serif 4",Georgia,serif;font-weight:600;font-size:24px;margin:0 0 6px}
+.sub{color:var(--muted);font-size:14px;margin:0 0 20px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.tags li{background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:14px}
+
+.list{list-style:none;margin:0;padding:0}
+.item{padding:14px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:none}
+.item .t{font-weight:500}
+.item .m{color:var(--muted);font-size:14px}
+.empty{color:var(--muted);font-style:italic}
+
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}
+.tab{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:6px;padding:6px 12px;font:500 14px Inter,sans-serif;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.date{display:inline-block;min-width:88px;font-variant-numeric:tabular-nums}
+
+footer{padding:28px 0 48px;color:var(--muted);font-size:13px}
+@media (max-width:560px){h1{font-size:32px}header{padding-top:40px}}
+</style>
+</head>
+<body>
+
+<div class="ticker" aria-label="Latest research">
+  <div class="label">Research radar</div>
+  <div class="track" id="ticker"><span>Loading latest papers …</span></div>
+</div>
+
+<div class="wrap">
+  <header>
+    <h1>Dominik Hümer</h1>
+    <p class="role">Portfolio management &amp; investment strategy · Fixed income, multi-asset and quantitative methods<br>Editorial Board, <em>The Journal of Fixed Income</em></p>
+    <div class="links">
+      <a class="pill" href="https://orcid.org/0009-0003-9339-0887" target="_blank" rel="noopener"><span class="orcid-dot">iD</span>ORCID 0009-0003-9339-0887</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Research interests</h2>
+    <p class="sub">Practitioner research at the intersection of markets and models.</p>
+    <ul class="tags">
+      <li>Euro government bonds &amp; country spreads</li>
+      <li>Credit spread decomposition</li>
+      <li>Term premia &amp; yield curve models</li>
+      <li>Factor investing</li>
+      <li>Multi-asset portfolio construction</li>
+      <li>Inflation dynamics</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Publications &amp; working papers</h2>
+    <p class="sub">Loaded live from my ORCID record.</p>
+    <ul class="list" id="works"><li class="empty">Loading …</li></ul>
+  </section>
+
+  <section>
+    <h2>Research radar</h2>
+    <p class="sub">Newest journal articles from the last 90 days, retrieved live from <a href="https://openalex.org" target="_blank" rel="noopener">OpenAlex</a>.</p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <ul class="list" id="radar"><li class="empty">Loading …</li></ul>
+  </section>
+
+  <footer>
+    Views expressed are my own and do not represent those of my employer. Nothing on this page constitutes investment advice.
+  </footer>
+</div>
+
+<script>
+const ORCID = "0009-0003-9339-0887";
+const TOPICS = [
+  {id:"fi",  name:"Fixed Income",     q:'"fixed income" OR "government bond" OR "yield curve" OR "term premium" OR "bond returns"'},
+  {id:"cr",  name:"Credit",           q:'"credit spread" OR "corporate bond" OR "credit risk premium"'},
+  {id:"fac", name:"Factor Investing", q:'"factor investing" OR "factor premia" OR "factor model" OR "smart beta"'},
+  {id:"ma",  name:"Multi-Asset",      q:'"asset allocation" OR "multi-asset" OR "portfolio construction"'}
+];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const iso = d => d.toISOString().slice(0,10);
+const cache = {};
+
+async function loadWorks(){
+  const el = document.getElementById("works");
+  try{
+    const r = await fetch(`https://pub.orcid.org/v3.0/${ORCID}/works`, {headers:{Accept:"application/json"}});
+    const groups = (await r.json()).group || [];
+    if(!groups.length){ el.innerHTML = '<li class="empty">First papers are in preparation and will appear here automatically once added to ORCID.</li>'; return; }
+    const rows = groups.map(g => g["work-summary"][0]).map(s => {
+      const ids = s["external-ids"]?.["external-id"] || [];
+      const doi = ids.find(i => i["external-id-type"] === "doi")?.["external-id-value"];
+      const link = doi ? `https://doi.org/${doi}` : (s.url?.value || `https://orcid.org/${ORCID}`);
+      return {title:s.title?.title?.value, year:s["publication-date"]?.year?.value || "", venue:s["journal-title"]?.value || "", type:(s.type||"").replace(/-/g," "), link};
+    }).sort((a,b) => (b.year||0) - (a.year||0));
+    el.innerHTML = rows.map(w => `<li class="item"><div class="t"><a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.title)}</a></div><div class="m">${[w.year,w.venue,w.type].filter(Boolean).map(esc).join(" · ")}</div></li>`).join("");
+  }catch(e){ el.innerHTML = `<li class="empty">Could not load ORCID right now – see <a href="https://orcid.org/${ORCID}">ORCID profile</a>.</li>`; }
+}
+
+async function fetchTopic(t, n=10){
+  if(cache[t.id]) return cache[t.id];
+  const to = iso(new Date()), from = iso(new Date(Date.now() - 90*864e5));
+  const filter = [`title_and_abstract.search:${t.q}`, "primary_topic.field.id:20", "primary_location.source.type:journal", `from_publication_date:${from}`, `to_publication_date:${to}`].join(",");
+  const u = `https://api.openalex.org/works?filter=${encodeURIComponent(filter)}&sort=publication_date:desc&per_page=${n}&select=id,title,publication_date,doi,primary_location,authorships`;
+  const r = await fetch(u); const j = await r.json();
+  return cache[t.id] = (j.results || []).map(w => ({
+    title:w.title, date:w.publication_date, link:w.doi || w.primary_location?.landing_page_url || w.id,
+    venue:w.primary_location?.source?.display_name || "",
+    authors:(w.authorships||[]).slice(0,3).map(a => a.author?.display_name).filter(Boolean).join(", ") + ((w.authorships||[]).length > 3 ? " et al." : "")
+  }));
+}
+
+async function showTopic(id){
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", b.dataset.id === id));
+  const el = document.getElementById("radar");
+  el.innerHTML = '<li class="empty">Loading …</li>';
+  try{
+    const items = await fetchTopic(TOPICS.find(t => t.id === id));
+    el.innerHTML = items.length ? items.map(w => `<li class="item"><div class="t"><a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.title)}</a></div><div class="m"><span class="date">${esc(w.date)}</span>${esc(w.venue)}${w.authors ? " · " + esc(w.authors) : ""}</div></li>`).join("")
+      : '<li class="empty">No new articles in this period.</li>';
+  }catch(e){ el.innerHTML = '<li class="empty">Research radar is temporarily unavailable.</li>'; }
+}
+
+async function buildTicker(){
+  const el = document.getElementById("ticker");
+  try{
+    const lists = await Promise.all(TOPICS.map(t => fetchTopic(t).then(x => x.slice(0,5).map(w => ({...w, topic:t.name})))));
+    const seen = new Set();
+    const all = lists.flat().filter(w => !seen.has(w.title) && seen.add(w.title)).sort((a,b) => b.date.localeCompare(a.date));
+    if(!all.length){ el.innerHTML = "<span>No new papers.</span>"; return; }
+    const html = all.map(w => `<span><a href="${esc(w.link)}" target="_blank" rel="noopener">${esc(w.title)}</a><span class="src">${esc(w.topic)} · ${esc(w.venue)}</span></span>`).join("");
+    el.innerHTML = html + html; // doubled for seamless loop
+  }catch(e){ el.innerHTML = "<span>Research radar is temporarily unavailable.</span>"; }
+}
+
+document.getElementById("tabs").innerHTML = TOPICS.map(t => `<button class="tab" role="tab" data-id="${t.id}">${t.name}</button>`).join("");
+document.getElementById("tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if(b) showTopic(b.dataset.id); });
+loadWorks();
+showTopic("fi");
+buildTicker();
+</script>
+</body>
+</html>
